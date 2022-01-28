@@ -6,8 +6,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import pylab as pl
+import time
 
 df = pd.read_csv('../../data/processed/compil.csv', encoding='utf-16') #lire le fichier
+
 
 ls_likes_tot = []
 ls_likes_vrai =[]
@@ -19,7 +21,7 @@ ratio = 0
 histo_plus = []
 histo_moins = []
 
-
+print("Début de la création des variables pour les figures")
 #Boucles pour créer les liste et enlever les vidéos inutiles
 for a in df['likes']:
     ls_likes_tot.append(a)
@@ -72,6 +74,11 @@ for b in range (len(ls_likes_vrai)):
         else:
             histo_moins.append(50)
 
+time.sleep(3)
+print("Fin de la création des variables. Affichage des figure dans...")
+for h in range (5,0,-1):
+    print("{}...".format(h))
+    time.sleep(1)
 
 x1 = [plus, moins] #Valeurs pour le camembert
 label1 = ["Video avec plus de likes que de dislikes", "video avec plus\n de dislikes que\n de likes"]
