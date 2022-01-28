@@ -5,53 +5,61 @@ import numpy as np
 import pandas as pd
 
 
-def ComputeMean():
+def ComputeMean(): #création de la fonction moyenne
     tab_likes = []
-    tab_dislikes = []
-    nbrtotdl = 0
+    tab_dislikes = [] #tableaux pour faire la médiane par la suite et trouver les 5 vidéos avec le plus de likes
+    nbrtotdl = 0 #variables avec le nombre total de likes / dislikes
     nbrtotl = 0
     moyenne_likes = 0 #variable pour la moyenne de likes
     moyenne_dislikes = 0  # variable pour la moyenne de dislikes
     cl = 0 #compteur pour calculer la moyenne
     df = pd.read_csv('../../data/processed/compil.csv', encoding='utf-16') #lire le fichier
 
-    for nl in df['likes']:
+    for nl in df['likes']: #lire la colonne des likes, en faire la somme et le mettre a la suite dans un tableau et faire un compteur pour la moyenne
         nbrtotl += nl
         cl += 1
         tab_likes.append(nl)
 
-    for ndl in df['dislikes']:
+    for ndl in df['dislikes']: #faire comme pour les likes mais avec les dislikes, le compteur est déha créé
         nbrtotdl += ndl
         tab_dislikes.append(ndl)
 
-    moyenne_likes = nbrtotl / cl
+    moyenne_likes = nbrtotl / cl #calculer les moyenne
     moyenne_dislikes = nbrtotdl / cl
 
-    return moyenne_likes, moyenne_dislikes, tab_likes, tab_dislikes, nbrtotl, nbrtotdl
+    return moyenne_likes, moyenne_dislikes, tab_likes, tab_dislikes, nbrtotl, nbrtotdl #renvoyer les valeurs demandées
 
-def ComputeMedian(tab_likes, tab_dislikes):
+def ComputeMedian(tab_likes, tab_dislikes): #création de la fonction médianne avec les listes des likes et des dislikes en argument
 
-    mediane_likes = 0
+    mediane_likes = 0 #initialiser les variables
     mediane_dislikes = 0
-    df = pd.read_csv('../../data/processed/compil.csv', encoding='utf-16')
+    df = pd.read_csv('../../data/processed/compil.csv', encoding='utf-16') #lire le fichier
 
 
-    tab_likes.sort()
+    tab_likes.sort() #trier les liste pour trouver la médiane
     tab_dislikes.sort()
 
-    a = len(tab_likes) / 2
-    b = len (tab_dislikes) / 2
+    a = len(tab_likes) // 2 #trouver l'index de la médianne du tableau de valeurs
+    b = len (tab_dislikes) // 2
 
-    mediane_likes = tab_likes[int(a)]
-    mediane_dislikes = tab_dislikes[int(a)]
+    if not len(tab_likes) % 2: #calculer les médianes
+        mediane_likes = (tab_likes[a-1] + tab_likes[a]) / 2
+    else:
+        mediane_likes = tab_likes[a]
 
-    return mediane_likes, mediane_dislikes
-    
-    
-df = pd.read_csv('../../data/processed/compil.csv', encoding='utf-16')
+    if not len(tab_dislikes) % 2:
+        mediane_dislikes = (tab_dislikes[b-1] + tab_dislikes[b]) / 2
+    else:
+        mediane_dislikes = tab_dislikes[b]
 
-moyenne_likes,moyenne_dislikes, tab_likes, tab_dislikes, nbrtotl, nbrtotdl = ComputeMean()
-for i in range (5):
+    return mediane_likes, mediane_dislikes #retourner les valeurs des médianes
+
+
+df = pd.read_csv('../../data/processed/compil.csv', encoding='utf-16')#lire le fichier
+
+moyenne_likes,moyenne_dislikes, tab_likes, tab_dislikes, nbrtotl, nbrtotdl = ComputeMean() #récupérer les valeurs pour les moyennes et le top 5 des vidéos
+
+for i in range (5): #Trouver les 5 vidéos les plus likés grâce à leur index dans la liste des likes totaux
     maxi = max(tab_likes)
     index = tab_likes.index(maxi)
     nom_video = df.loc[index,'title']
@@ -60,16 +68,17 @@ for i in range (5):
     tab_likes[index] = 0
 
 
-print("\n le nombre de total de likes est de {} likes".format(nbrtotl))
+print("\n le nombre de total de likes est de {} likes".format(nbrtotl))#Donner le nombre total de likes et de dislikes
 print("le nombre de total de dislikes est de {} dislikes\n".format(nbrtotdl))
 
-mediane_likes, mediane_dislikes = ComputeMedian(tab_likes, tab_dislikes)
+mediane_likes, mediane_dislikes = ComputeMedian(tab_likes, tab_dislikes)#récupérer les valeurs pour les médianes
 
-print("La moyenne de likes des vidéos YouTube est de {:.2f} likes, (arrondi au centième)".format(moyenne_likes))
+print("La moyenne de likes des vidéos YouTube est de {:.2f} likes, (arrondi au centième)".format(moyenne_likes))#afficher les moyennes
 print("La moyenne de dislikes des vidéos YouTube est de {:.2f} dislikes, (arrondi au centième)\n".format(moyenne_dislikes))
+
 print("La valeur médiane des likes se situe à {} likes, cela signifie que la moitié des vidéos analysées "
       "ont un nombre de likes inférieur à  cette valeur et l'autre moitié un nombre supérieur à cette valeur".format(mediane_likes))
 print("La valeur médiane des dislikes se situe à {} dislikes, cela signifie que la moitié des vidéos analysées "
-      "ont un nombre de dislikes inférieur à  cette valeur et l'autre moitié un nombre supérieur à cette valeur".format(mediane_dislikes))
+      "ont un nombre de dislikes inférieur à  cette valeur et l'autre moitié un nombre supérieur à cette valeur".format(mediane_dislikes))#afficher les médianes
 
 
